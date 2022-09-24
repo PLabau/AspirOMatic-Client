@@ -32,12 +32,13 @@ String IP_DU_SERVEUR = "";
 // Activation ou non de la mise à jour a distance.
 #define UPDATE_FIRMWARE_A_DISTANCE 1
 
-// Utilisation du bouton physique pour couper ou pas l'alim de la machine
-#define BOUTON_ACTIF 1
+// Etat du relais a la mise sous tension du module
+#define ETAT_RELAIS_INITIAL 0
 
 // Parametre du Wifi
-const char *SSID = "NOM_DU_WIFI";
-const char *PASSWORD = "MOT_DE_PASSE_WIFI";
+const char *SSID = "VOTRE_SSID_WIFI";
+const char *PASSWORD = "VOTRE_MDP_WIFI";
+
 
 // ------------------------------------------------------------------------------------------------------
 // NE RIEN TOUCHER ENSUITE
@@ -51,7 +52,7 @@ const char *PASSWORD = "MOT_DE_PASSE_WIFI";
 // variables
 String ReturnData = "";
 int ReturnStatus;
-bool Button_LastState = true;
+bool Button_LastState;
 bool Button_CurrentState;
 bool ServeurOK_Via_MDNS = false;
 
@@ -458,7 +459,6 @@ void Systeme_DoAction()
   }
 }
 
-#if BOUTON_ACTIF == 1
 void Button_Check()
 {
   // A Chaque Appui le bouton on change l'etat du relais.
@@ -481,7 +481,6 @@ void Button_Check()
     }
   }
 }
-#endif
 
 void FindServer()
 {
@@ -519,9 +518,19 @@ void setup()
   pinMode(PIN_LED_WIFI, OUTPUT);
   pinMode(PIN_RELAIS, OUTPUT);
 
-  // ACtivation du relais  et de la lED
+  // Activation du relais et de la LED
+  if (ETAT_RELAIS_INITIAL)
+  {
     digitalWrite(PIN_RELAIS, HIGH);
     digitalWrite(PIN_LED_STATUS, LOW);
+    Button_LastState = true;
+  }
+  else
+  {
+    digitalWrite(PIN_RELAIS, LOW);
+    digitalWrite(PIN_LED_STATUS, HIGH);
+    Button_LastState = false;
+  }
 
   // Connecion du WIFI
   WiFi.mode(WIFI_STA);
@@ -589,10 +598,7 @@ void loop()
   Syteme_ReadPower(); // Lectuer du capteur de courant CSE7766
   Systeme_DoAction(); // GEstion des ACtions selon detection
   www.handleClient(); // Web (facultatif)
-
-#if BOUTON_ACTIF == 1
   Button_Check(); // relais via bouton (facultatif)
-#endif
 
 #if UPDATE_FIRMWARE_A_DISTANCE == 1
   ArduinoOTA.handle();
