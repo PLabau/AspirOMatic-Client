@@ -35,10 +35,12 @@ String IP_DU_SERVEUR = "";
 // Etat du relais a la mise sous tension du module
 #define ETAT_RELAIS_INITIAL 0
 
-// Parametre du Wifi
-const char *SSID = "VOTRE_SSID_WIFI";
-const char *PASSWORD = "VOTRE_MDP_WIFI";
+// Puissance necessaire pour lancer l'activation de l'aspirateur (en W)
+#define POWER_LEVEL_LANCEMENT 15
 
+// Parametre du Wifi
+//const char *SSID = "VOTRE_SSID_WIFI";
+//const char *PASSWORD = "VOTRE_MDP_WIFI";
 
 // ------------------------------------------------------------------------------------------------------
 // NE RIEN TOUCHER ENSUITE
@@ -428,7 +430,7 @@ void Systeme_DoAction()
   static String Last_Status = "OFF";
 
   // dans quel etat doit etre l'aspi distant ?
-  if (Mesure_Tension > 200 && Mesure_Puissance > 15)
+  if (Mesure_Tension > 200 && Mesure_Puissance > POWER_LEVEL_LANCEMENT)
     Current_Status = "ON";
   else
     Current_Status = "OFF";
