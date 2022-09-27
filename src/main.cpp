@@ -35,7 +35,7 @@ String IP_DU_SERVEUR = "";
 // Etat du relais a la mise sous tension du module
 #define ETAT_RELAIS_INITIAL 0
 
-// Puissance necessaire pour lancer l'activation de l'aspirateur (en W)
+// Puissance necessaire pour lancer l'aspirateur (en W)
 #define POWER_LEVEL_LANCEMENT 15
 
 // Parametre du Wifi
